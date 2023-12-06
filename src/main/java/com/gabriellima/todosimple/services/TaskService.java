@@ -1,5 +1,6 @@
 package com.gabriellima.todosimple.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class TaskService {
         ));
     }
 
+    public List<Task> findAllByUserId(Long userId){
+        List<Task> task = this.taskRepository.findByUser_Id(userId);
+        return task;
+    }
+
     @Transactional
     public Task create(Task obj){
         User user = this.userService.findById(obj.getUser().getId());
@@ -48,4 +54,5 @@ public class TaskService {
             throw new RuntimeException("Não é possivel excluir pois há entidades relacionadas!");
         }
     }
+
 }
