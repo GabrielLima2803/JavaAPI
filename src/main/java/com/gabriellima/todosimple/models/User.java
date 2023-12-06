@@ -2,17 +2,18 @@ package com.gabriellima.todosimple.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.Objects;
 
 @Entity
 @Table(name = User.TABLE_NAME) 
@@ -34,13 +35,14 @@ public class User {
     @Size(groups = CreateUser.class, min = 2, max = 100)
     private String username;
 
-    @Column(name = "usrname", length = 60, nullable = false)
+    @Column(name = "password", length = 60, nullable = false)
     @NotNull(groups = {CreateUser.class, UpdateUser.class})
     @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
-    // private List<Task> task = new ArrayList<Task>()
+    @OneToMany(mappedBy = "user")
+    private List<Task> task = new ArrayList<Task>();
 
     public User(){
 
@@ -80,6 +82,17 @@ public class User {
         this.password = password;
     }
     
+
+    public List<Task> getTask() {
+        return this.task;
+    }
+
+    public void setTask(List<Task> task) {
+        this.task = task;
+    }
+
+
+
     @Override
     public boolean equals(Object obj){
         if (obj == this) {
@@ -98,10 +111,9 @@ public class User {
             else if (!this.id.equals(other.id))
                 return false;
         return Objects.equals(this.id, other.id) && Objects.equals(this.username, other.username) && Objects.equals(this.password, other.password);
-                
-           
-       
     }
+
+
 
     @Override
     public int hashCode(){
